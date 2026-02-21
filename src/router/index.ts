@@ -32,7 +32,7 @@ const router = createRouter({
     {
       path: '/forgot-password',
       name: 'forgot-password',
-      component: () => import('../views/auth/ForgotPasswordView.vue'),
+      component: () => import('../views/auth/FeatureUnderMaintenanceView.vue'),
       meta: { guest: true },
     },
     {

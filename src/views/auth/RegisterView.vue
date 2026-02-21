@@ -2,9 +2,14 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import { useThemeStore } from '@/stores/theme'
+import logo from '@/assets/logo.png'
+import logoWhite from '@/assets/logo-white.png'
 
 const router = useRouter()
 const auth = useAuthStore()
+const theme = useThemeStore()
+const logoSrc = computed(() => (theme.isDark ? logoWhite : logo))
 
 const name = ref('')
 const email = ref('')
@@ -52,7 +57,7 @@ async function onSubmit() {
     <div class="auth-page__content">
       <div class="auth-card fade-in">
         <RouterLink to="/login" class="auth-page__brand">
-        <img src="@/assets/logo.png" alt="Flash Sale" class="auth-page__logo">
+        <img :src="logoSrc" alt="Flash Sale" class="auth-page__logo">
       </RouterLink>
         <h1 class="auth-card__title">Create account</h1>
         <p class="auth-card__subtitle">Join Flash Sale and start saving today</p>
