@@ -237,3 +237,138 @@ img.auth-page__logo {
   opacity: 0;
   transform: translateY(-4px);
 }
+
+/* Dark theme: auth pages */
+.dark .auth-page__bg {
+  background: #0f172a;
+}
+.dark .auth-card {
+  background: #1e293b;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  border: 1px solid #334155;
+}
+.dark .auth-card:hover {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+.dark .auth-card__title {
+  color: #f1f5f9;
+}
+.dark .auth-card__subtitle {
+  color: #94a3b8;
+}
+.dark .auth-form__label {
+  color: #cbd5e1;
+}
+.dark .auth-form__input {
+  background: #0f172a;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+.dark .auth-form__input::placeholder {
+  color: #64748b;
+}
+.dark .auth-form__input:hover {
+  background: #1e293b;
+  border-color: #2482c2;
+}
+.dark .auth-form__input:focus {
+  border-color: #2482c2;
+  background: #1e293b;
+  box-shadow: 0 0 0 3px rgba(36, 130, 194, 0.3);
+}
+.dark .auth-form__link {
+  color: #7dd3fc;
+}
+.dark .auth-form__link:hover {
+  color: #38bdf8;
+}
+.dark .auth-form__password-toggle {
+  color: #94a3b8;
+}
+.dark .auth-form__password-toggle:hover {
+  color: #2482c2;
+  background: #334155;
+}
+.dark .auth-card__footer {
+  border-top-color: #475569;
+  color: #94a3b8;
+}
+
+/* Dark theme: navbar & app */
+.dark .app-header {
+  background: rgba(30, 41, 59, 0.95);
+  border-color: #334155;
+}
+.dark .app-header a {
+  color: #cbd5e1;
+}
+.dark .app-header a:hover,
+.dark .app-header a.router-link-active {
+  color: #f1f5f9;
+  background: #334155;
+}
+.dark .app-header .app-header__brand:hover {
+  color: #7dd3fc;
+}
+.dark .app-header .app-header__user {
+  color: #94a3b8;
+}
+.dark .app-header .app-header__btn-logout:hover {
+  color: #f87171;
+  background: #7f1d1d;
+}
+.dark .app-header .app-header__btn-primary {
+  background: #2482c2;
+  color: white;
+}
+.dark .app-header .app-header__btn-primary:hover {
+  background: #1a6396;
+}
+
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.theme-toggle:hover {
+  color: #2482c2;
+  background: #e9f3f9;
+}
+.dark .theme-toggle {
+  color: #94a3b8;
+}
+.dark .theme-toggle:hover {
+  color: #7dd3fc;
+  background: #334155;
+}
+.theme-toggle svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+.theme-toggle--fixed {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+}
+
+/* Dark theme: home page card */
+.dark .home-card {
+  background: #1e293b;
+  border-color: #334155;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+.dark .home-card__title {
+  color: #f1f5f9;
+}
+.dark .home-card__text {
+  color: #94a3b8;
+}

@@ -6,9 +6,12 @@ import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
 
-const app = createApp(App)
+const savedTheme = localStorage.getItem('flash-sale-theme')
+if (savedTheme === 'dark') {
+  document.documentElement.classList.add('dark')
+}
 
+const app = createApp(App)
 app.use(createPinia())
 app.use(router)
-
 app.mount('#app')
