@@ -95,7 +95,7 @@ onMounted(() => {
       currentUserFromStore: JSON.stringify(auth.currentUser, null, 2),
       userFromLocalStorage: storedUser,
       userFromLocalStorageRaw: localStorage.getItem('user'),
-      displayName: auth.currentUser?.email || auth.currentUser?.name || 'User',
+      displayName: auth.currentUser?.name || 'User',
     })
   }
   flashSaleEndsAt.value = Date.now() + 15 * 60 * 1000
