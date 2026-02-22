@@ -360,6 +360,11 @@ img.auth-page__logo {
   z-index: 50;
 }
 
+/* Navbar logo: light mode = invert (dark logo), dark mode = no invert (white logo) */
+.app-header__logo {
+  display: block;
+}
+
 /* Dark theme: home page card */
 .dark .home-card {
   background: #1e293b;
@@ -371,4 +376,9 @@ img.auth-page__logo {
 }
 .dark .home-card__text {
   color: #94a3b8;
+}
+
+/* Flash sale card (discount > 50%): konsisten di dark theme - biru tema */
+.dark .flash-sale-card {
+  border-color: rgba(36, 130, 194, 0.5);
 }

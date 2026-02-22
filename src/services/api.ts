@@ -1,6 +1,7 @@
 import axios, { type AxiosError } from 'axios'
 
 const baseURL = import.meta.env.VITE_API_BASE_URL ?? ''
+/** Key untuk access_token yang disimpan setelah login (response.access_token). */
 const TOKEN_KEY = 'token'
 
 export const api = axios.create({
@@ -11,9 +12,9 @@ export const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem(TOKEN_KEY)
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
+  const accessToken = localStorage.getItem(TOKEN_KEY)
+  if (accessToken) {
+    config.headers.Authorization = `Bearer ${accessToken}`
   }
   return config
 })

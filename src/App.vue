@@ -3,11 +3,16 @@ import { computed } from 'vue'
 import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
+import { useProductFiltersStore } from '@/stores/productFilters'
+import logo from '@/assets/logo.png'
+import logoWhite from '@/assets/logo-white.png'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
 const theme = useThemeStore()
+const productFilters = useProductFiltersStore()
+const logoSrc = computed(() => (theme.isDark ? logoWhite : logo))
 
 function handleLogout() {
   auth.logout()
@@ -31,11 +36,40 @@ const showNavbar = computed(() => !isAuthPage.value)
       <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:py-4">
         <RouterLink
           :to="auth.isAuthenticated ? '/' : '/login'"
-          class="app-header__brand text-base font-bold text-slate-800 transition hover:text-primary sm:text-lg"
+          class="app-header__brand flex shrink-0 items-center transition opacity-90 hover:opacity-100"
+          aria-label="Flash Sale"
         >
-          Flash Sale
+          <img
+            :src="logoSrc"
+            alt="Flash Sale"
+            class="app-header__logo h-8 w-auto object-contain sm:h-9"
+          />
         </RouterLink>
-        <nav class="flex flex-wrap items-center gap-2 sm:gap-4">
+        <div
+          v-if="auth.isAuthenticated"
+          class="flex min-w-0 flex-1 flex-wrap items-center gap-2 px-4 sm:gap-3"
+        >
+          <label for="navbar-product-search" class="sr-only">Search products</label>
+          <input
+            id="navbar-product-search"
+            v-model="productFilters.searchQuery"
+            type="search"
+            placeholder="Search products..."
+            class="w-full min-w-0 max-w-[180px] rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder-slate-500 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:placeholder-slate-400 sm:max-w-[220px]"
+            autocomplete="off"
+          />
+          <select
+            v-model="productFilters.selectedCategory"
+            class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
+            aria-label="Filter by category"
+          >
+            <option value="">All categories</option>
+            <option v-for="cat in productFilters.categories" :key="cat" :value="cat">
+              {{ cat }}
+            </option>
+          </select>
+        </div>
+        <nav class="ml-auto flex shrink-0 flex-wrap items-center gap-2 sm:gap-4">
           <template v-if="!auth.isAuthenticated">
             <RouterLink
               to="/login"
@@ -53,21 +87,7 @@ const showNavbar = computed(() => !isAuthPage.value)
             </RouterLink>
           </template>
           <template v-else>
-            <RouterLink
-              to="/"
-              class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-              active-class="router-link-active bg-slate-100 font-medium text-slate-900"
-            >
-              Home
-            </RouterLink>
-            <RouterLink
-              to="/about"
-              class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-              active-class="router-link-active bg-slate-100 font-medium text-slate-900"
-            >
-              About
-            </RouterLink>
-            <span class="app-header__user px-3 py-2 text-slate-600">{{ auth.currentUser?.name }}</span>
+            <span class="app-header__user px-3 py-2 text-slate-600">{{ auth.currentUser?.name || auth.currentUser?.email || 'User' }}</span>
             <button
               type="button"
               class="app-header__btn-logout rounded-lg px-3 py-2 text-slate-600 transition hover:bg-red-50 hover:text-red-600"
@@ -75,10 +95,24 @@ const showNavbar = computed(() => !isAuthPage.value)
             >
               Log out
             </button>
+            <button
+              type="button"
+              class="theme-toggle shrink-0"
+              :aria-label="theme.isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+              @click="theme.toggle()"
+            >
+              <svg v-if="theme.isDark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+              <svg v-else fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            </button>
           </template>
           <button
+            v-if="!auth.isAuthenticated"
             type="button"
-            class="theme-toggle"
+            class="theme-toggle shrink-0"
             :aria-label="theme.isDark ? 'Switch to light mode' : 'Switch to dark mode'"
             @click="theme.toggle()"
           >

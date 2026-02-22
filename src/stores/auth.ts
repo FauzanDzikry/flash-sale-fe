@@ -6,21 +6,24 @@ import {
   setTokens,
   setUser,
   clearTokens,
+  normalizeUser,
   authApi,
   type LoginPayload,
   type RegisterPayload,
   type ForgotPasswordPayload,
   type VerifyOtpPayload,
+  type StoredUser,
 } from '@/services/auth'
 
 export const useAuthStore = defineStore('auth', () => {
+  // Inisialisasi dari localStorage agar "Welcome, {name}" tampil benar setelah reload
   const token = ref<string | null>(getToken())
   const user = ref<ReturnType<typeof getUser>>(getUser())
 
   const isAuthenticated = computed(() => !!token.value)
   const currentUser = computed(() => user.value)
 
-  function setAuth(accessToken: string, refreshToken?: string, userData?: { id: string; name: string; email: string }) {
+  function setAuth(accessToken: string, refreshToken?: string, userData?: StoredUser | null) {
     setTokens(accessToken, refreshToken)
     token.value = accessToken
     if (userData) {
@@ -39,13 +42,20 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(payload: LoginPayload) {
     const res = await authApi.login(payload)
-    setAuth(res.access_token, res.refresh_token, res.user)
+    if (import.meta.env.DEV) {
+      console.log('[AuthStore] Login response:', { res, user: res.user })
+    }
+    // Simpan id, name, email dari response.user (bukan hanya email)
+    const userData = normalizeUser(res.user, payload.email)
+    setAuth(res.access_token, res.refresh_token, userData)
     return res
   }
 
   async function register(payload: RegisterPayload) {
     const res = await authApi.register(payload)
-    setAuth(res.access_token, res.refresh_token, res.user)
+    // Simpan id, name, email dari response.user
+    const userData = normalizeUser(res.user, payload.email)
+    setAuth(res.access_token, res.refresh_token, userData)
     return res
   }
 
