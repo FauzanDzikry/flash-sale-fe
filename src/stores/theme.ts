@@ -23,7 +23,7 @@ function apply(isDark: boolean) {
 }
 
 export const useThemeStore = defineStore('theme', () => {
-  const isDark = ref(getStored())
+  const isDark = ref(getStored() === 'dark')
   apply(isDark.value)
 
   function toggle() {

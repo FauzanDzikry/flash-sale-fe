@@ -74,15 +74,21 @@ export function getUser(): AuthResponse['user'] | null {
   }
 }
 
+/** Unwrap jika backend mengembalikan { data: AuthResponse }. */
+function unwrapAuthResponse(body: AuthResponse | { data: AuthResponse }): AuthResponse {
+  const raw = body as { data?: AuthResponse }
+  return raw?.data && typeof raw.data.access_token !== 'undefined' ? raw.data : (body as AuthResponse)
+}
+
 export const authApi = {
   async login(payload: LoginPayload): Promise<AuthResponse> {
-    const { data } = await api.post<AuthResponse>('/auth/login', payload)
-    return data
+    const { data } = await api.post<AuthResponse | { data: AuthResponse }>('/auth/login', payload)
+    return unwrapAuthResponse(data)
   },
 
   async register(payload: RegisterPayload): Promise<AuthResponse> {
-    const { data } = await api.post<AuthResponse>('/auth/register', payload)
-    return data
+    const { data } = await api.post<AuthResponse | { data: AuthResponse }>('/auth/register', payload)
+    return unwrapAuthResponse(data)
   },
 
   async forgotPassword(payload: ForgotPasswordPayload): Promise<{ message: string }> {

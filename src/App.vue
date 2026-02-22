@@ -1,12 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { RouterLink, RouterView, useRoute } from 'vue-router'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 
 const route = useRoute()
+const router = useRouter()
 const auth = useAuthStore()
 const theme = useThemeStore()
+
+function handleLogout() {
+  auth.logout()
+  router.push({ name: 'login' })
+}
 
 const isAuthPage = computed(() => {
   const name = route.name
@@ -65,7 +71,7 @@ const showNavbar = computed(() => !isAuthPage.value)
             <button
               type="button"
               class="app-header__btn-logout rounded-lg px-3 py-2 text-slate-600 transition hover:bg-red-50 hover:text-red-600"
-              @click="auth.logout()"
+              @click="handleLogout"
             >
               Log out
             </button>

@@ -23,7 +23,7 @@ api.interceptors.response.use(
   (error: AxiosError<{ message?: string }>) => {
     const message =
       error.response?.data?.message ??
-      (error.response?.status === 401 ? 'Sesi habis, silakan login kembali' : 'Request gagal')
+      (error.response?.status === 401 ? 'Session expired, please sign in again' : 'Request failed')
     throw new Error(message)
   }
 )

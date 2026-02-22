@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
+import Modal from '@/components/Modal.vue'
 import logo from '@/assets/logo.png'
 import logoWhite from '@/assets/logo-white.png'
 
-const router = useRouter()
+const SUCCESS_MODAL_DURATION_MS = 1000
+
 const auth = useAuthStore()
 const theme = useThemeStore()
 const logoSrc = computed(() => (theme.isDark ? logoWhite : logo))
@@ -18,7 +19,24 @@ const passwordConfirmation = ref('')
 const showPassword = ref(false)
 const error = ref('')
 const loading = ref(false)
+const showSuccessModal = ref(false)
+const showErrorModal = ref(false)
 const passwordsMatch = computed(() => password.value === passwordConfirmation.value)
+
+function closeSuccessAndGoHome() {
+  showSuccessModal.value = false
+  window.location.replace('/')
+}
+
+function scheduleRedirect() {
+  setTimeout(() => {
+    closeSuccessAndGoHome()
+  }, SUCCESS_MODAL_DURATION_MS)
+}
+
+function closeErrorModal() {
+  showErrorModal.value = false
+}
 
 async function onSubmit() {
   error.value = ''
@@ -42,9 +60,11 @@ async function onSubmit() {
       password: password.value,
       password_confirmation: passwordConfirmation.value,
     })
-    router.push({ name: 'home' })
+    showSuccessModal.value = true
+    scheduleRedirect()
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Registration failed. Please try again.'
+    showErrorModal.value = true
   } finally {
     loading.value = false
   }
@@ -154,6 +174,40 @@ async function onSubmit() {
         <RouterLink to="/login" class="auth-form__link">← Back to login</RouterLink>
       </p>
     </div>
+
+    <Modal
+      :show="showSuccessModal"
+      title="Registrasi berhasil"
+      :close-on-overlay="false"
+      @close="closeSuccessAndGoHome"
+    >
+      <div class="success-modal">
+        <div class="success-modal__icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h2 class="success-modal__title">User created successfully</h2>
+        <p class="success-modal__text">Redirecting to home page...</p>
+      </div>
+    </Modal>
+
+    <Modal
+      :show="showErrorModal"
+      title="Registration failed"
+      :close-on-overlay="true"
+      @close="closeErrorModal"
+    >
+      <div class="error-modal">
+        <div class="error-modal__icon">
+          <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h2 class="error-modal__title">Registration failed</h2>
+        <p class="error-modal__text">{{ error }}</p>
+      </div>
+    </Modal>
   </div>
 </template>
 
@@ -172,5 +226,104 @@ async function onSubmit() {
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.875rem;
+}
+
+.success-modal {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+.success-modal__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  background: #dcfce7;
+  color: #16a34a;
+  margin-bottom: 1rem;
+}
+.dark .success-modal__icon {
+  background: #14532d;
+  color: #86efac;
+}
+.success-modal__icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.success-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+}
+.dark .success-modal__title {
+  color: #e2e8f0;
+}
+.success-modal__text {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+.dark .success-modal__text {
+  color: #94a3b8;
+}
+.success-modal__btn {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: white;
+  background: #16a34a;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.success-modal__btn:hover {
+  background: #15803d;
+}
+
+.error-modal {
+  text-align: center;
+  padding: 0.5rem 0;
+}
+.error-modal__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 9999px;
+  background: #fee2e2;
+  color: #dc2626;
+  margin-bottom: 1rem;
+}
+.dark .error-modal__icon {
+  background: #7f1d1d;
+  color: #fca5a5;
+}
+.error-modal__icon svg {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+.error-modal__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+}
+.dark .error-modal__title {
+  color: #e2e8f0;
+}
+.error-modal__text {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0 0 1.5rem;
+  line-height: 1.5;
+}
+.dark .error-modal__text {
+  color: #94a3b8;
 }
 </style>

@@ -57,11 +57,11 @@ onUnmounted(() => {
       >
         <!-- Overlay -->
         <div
-          class="absolute inset-0 bg-slate-900/50"
+          class="absolute inset-0 bg-slate-900/50 dark:bg-slate-950/60"
           @click="onOverlayClick"
         />
 
-        <!-- Card -->
+        <!-- Card: opacity ~70%, tema dark mode -->
         <Transition
           enter-active-class="transition duration-200 ease-out"
           enter-from-class="opacity-0 scale-95"
@@ -72,13 +72,13 @@ onUnmounted(() => {
         >
           <div
             v-show="show"
-            class="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-xl"
+            class="relative w-full max-w-md max-h-[90vh] overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-xl opacity-90 dark:border-slate-600 dark:bg-slate-800 dark:shadow-slate-900/50"
             @click.stop
           >
             <div class="sticky top-0 z-10 -mt-2 flex justify-end">
               <button
                 type="button"
-                class="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none"
+                class="rounded-full p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:outline-none dark:focus:ring-offset-slate-800"
                 aria-label="Close"
                 @click="emit('close')"
               >
