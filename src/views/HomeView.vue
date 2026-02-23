@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useProductFiltersStore } from '@/stores/productFilters'
+import { useCartStore } from '@/stores/cart'
 import { dummyProducts } from '@/data/dummyProducts'
+import type { DummyProduct } from '@/data/dummyProducts'
 
+const router = useRouter()
 const auth = useAuthStore()
 const productFilters = useProductFiltersStore()
+const cart = useCartStore()
+
+function addToCartAndGo(product: DummyProduct) {
+  cart.addToCart(product, 1)
+  router.push({ name: 'cart' })
+}
 const now = ref(Date.now())
 const flashSaleEndsAt = ref<number>(0)
 
@@ -126,7 +136,7 @@ onUnmounted(() => {
           <div
             v-for="product in filteredFlashSaleProducts"
             :key="product.id"
-            class="flash-sale-card relative min-w-[280px] max-w-[280px] shrink-0 overflow-hidden rounded-xl border border-primary-border bg-white p-4 shadow-md dark:border-primary/40 dark:bg-slate-800/80"
+            class="flash-sale-card relative flex min-w-[280px] max-w-[280px] shrink-0 flex-col overflow-hidden rounded-xl border border-primary-border bg-white p-4 shadow-md dark:border-primary/40 dark:bg-slate-800/80"
             style="scroll-snap-align: start;"
           >
             <span class="absolute right-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white shadow">
@@ -154,9 +164,22 @@ onUnmounted(() => {
             <p class="mb-1 text-sm text-slate-500 line-through dark:text-slate-500">
               {{ formatPrice(product.price) }}
             </p>
-            <p class="mb-0 text-lg font-bold text-red-600 dark:text-red-400">
+            <p class="mb-4 text-lg font-bold text-red-600 dark:text-red-400">
               {{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}
             </p>
+            <div class="mt-auto flex justify-end">
+              <button
+                type="button"
+                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50"
+                :disabled="product.qty < 1"
+                aria-label="Add to cart"
+                @click="addToCartAndGo(product)"
+              >
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -167,7 +190,7 @@ onUnmounted(() => {
           <div
             v-for="product in filteredRegularProducts"
             :key="product.id"
-            class="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-slate-600 dark:bg-slate-700/50"
+            class="flex flex-col rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-slate-600 dark:bg-slate-700/50"
           >
             <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-200">
               {{ product.name }}
@@ -178,10 +201,24 @@ onUnmounted(() => {
             <p class="mb-1 text-lg font-semibold text-slate-800 dark:text-slate-200">
               {{ formatPrice(product.price) }}
             </p>
-            <p v-if="product.discount > 0" class="text-sm text-slate-600 dark:text-slate-400">
+            <p v-if="product.discount > 0" class="mb-4 text-sm text-slate-600 dark:text-slate-400">
               Discount {{ product.discount }}% →
               {{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}
             </p>
+            <p v-else class="mb-4"></p>
+            <div class="mt-auto flex justify-end">
+              <button
+                type="button"
+                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50"
+                :disabled="product.qty < 1"
+                aria-label="Add to cart"
+                @click="addToCartAndGo(product)"
+              >
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 

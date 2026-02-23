@@ -4,6 +4,7 @@ import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { useProductFiltersStore } from '@/stores/productFilters'
+import { useCartStore } from '@/stores/cart'
 import logo from '@/assets/logo.png'
 import logoWhite from '@/assets/logo-white.png'
 
@@ -12,6 +13,7 @@ const router = useRouter()
 const auth = useAuthStore()
 const theme = useThemeStore()
 const productFilters = useProductFiltersStore()
+const cart = useCartStore()
 const logoSrc = computed(() => (theme.isDark ? logoWhite : logo))
 
 function handleLogout() {
@@ -87,6 +89,21 @@ const showNavbar = computed(() => !isAuthPage.value)
             </RouterLink>
           </template>
           <template v-else>
+            <RouterLink
+              to="/cart"
+              class="relative rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              aria-label="Cart"
+            >
+              <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span
+                v-if="cart.totalItems > 0"
+                class="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1.5 text-xs font-bold text-white"
+              >
+                {{ cart.totalItems > 99 ? '99+' : cart.totalItems }}
+              </span>
+            </RouterLink>
             <button
               type="button"
               class="app-header__btn-logout rounded-lg px-3 py-2 text-slate-600 transition hover:bg-red-50 hover:text-red-600"

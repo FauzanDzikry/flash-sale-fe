@@ -18,6 +18,12 @@ const routes = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/cart',
+    name: 'cart',
+    component: () => import('../views/CartView.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/login',
     name: 'login',
     component: () => import('../views/auth/LoginView.vue'),
