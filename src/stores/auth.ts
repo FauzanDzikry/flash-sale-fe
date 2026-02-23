@@ -42,9 +42,6 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function login(payload: LoginPayload) {
     const res = await authApi.login(payload)
-    if (import.meta.env.DEV) {
-      console.log('[AuthStore] Login response:', { res, user: res.user })
-    }
     // Simpan id, name, email dari response.user (bukan hanya email)
     const userData = normalizeUser(res.user, payload.email)
     setAuth(res.access_token, res.refresh_token, userData)

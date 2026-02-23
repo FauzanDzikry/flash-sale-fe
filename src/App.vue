@@ -69,7 +69,7 @@ const showNavbar = computed(() => !isAuthPage.value)
             </option>
           </select>
         </div>
-        <nav class="ml-auto flex shrink-0 flex-wrap items-center gap-2 sm:gap-4">
+        <nav class="ml-auto flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2 sm:gap-4">
           <template v-if="!auth.isAuthenticated">
             <RouterLink
               to="/login"
@@ -87,7 +87,6 @@ const showNavbar = computed(() => !isAuthPage.value)
             </RouterLink>
           </template>
           <template v-else>
-            <span class="app-header__user px-3 py-2 text-slate-600">{{ auth.currentUser?.name || auth.currentUser?.email || 'User' }}</span>
             <button
               type="button"
               class="app-header__btn-logout rounded-lg px-3 py-2 text-slate-600 transition hover:bg-red-50 hover:text-red-600"

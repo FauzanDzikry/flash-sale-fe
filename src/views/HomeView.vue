@@ -2,7 +2,6 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useProductFiltersStore } from '@/stores/productFilters'
-import { getUser } from '@/services/auth'
 import { dummyProducts } from '@/data/dummyProducts'
 
 const auth = useAuthStore()
@@ -87,17 +86,6 @@ function isLowStock(qty: number): boolean {
 
 let timer: ReturnType<typeof setInterval> | null = null
 onMounted(() => {
-  if (import.meta.env.DEV) {
-    const storedUser = getUser()
-    console.log('[HomeView] Masuk ke HomeView – data auth:', {
-      isAuthenticated: auth.isAuthenticated,
-      currentUser: auth.currentUser,
-      currentUserFromStore: JSON.stringify(auth.currentUser, null, 2),
-      userFromLocalStorage: storedUser,
-      userFromLocalStorageRaw: localStorage.getItem('user'),
-      displayName: auth.currentUser?.name || 'User',
-    })
-  }
   flashSaleEndsAt.value = Date.now() + 15 * 60 * 1000
   timer = setInterval(() => {
     now.value = Date.now()
