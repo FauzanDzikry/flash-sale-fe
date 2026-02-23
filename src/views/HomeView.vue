@@ -136,32 +136,32 @@ onUnmounted(() => {
           <div
             v-for="product in filteredFlashSaleProducts"
             :key="product.id"
-            class="flash-sale-card relative flex min-w-[280px] max-w-[280px] shrink-0 flex-col overflow-hidden rounded-xl border border-primary-border bg-white p-4 shadow-md dark:border-primary/40 dark:bg-slate-800/80"
+            class="flash-sale-card relative flex min-w-[280px] max-w-[280px] shrink-0 flex-col overflow-hidden rounded-xl border border-primary-border bg-white p-4 shadow-md dark:border-slate-600 dark:bg-slate-800 dark:shadow-slate-900/50"
             style="scroll-snap-align: start;"
           >
-            <span class="absolute right-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white shadow">
+            <span class="absolute right-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white shadow dark:bg-red-600">
               Flash Sale
             </span>
             <div class="mb-2 mt-1">
-              <span class="inline-block rounded bg-red-500 px-2 py-0.5 text-sm font-semibold text-white">
+              <span class="inline-block rounded bg-red-500 px-2 py-0.5 text-sm font-semibold text-white dark:bg-red-600">
                 -{{ product.discount }}%
               </span>
             </div>
-            <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-200">
+            <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-100">
               {{ product.name }}
             </h3>
             <div class="mb-2 flex items-center gap-2">
-              <p class="text-sm text-slate-600 dark:text-slate-400">
+              <p class="text-sm text-slate-600 dark:text-slate-300">
                 Stock: {{ product.qty }}
               </p>
               <span
                 v-if="isLowStock(product.qty)"
-                class="rounded bg-amber-200 px-1.5 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-700 dark:text-amber-100"
+                class="rounded bg-amber-200 px-1.5 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-600/80 dark:text-amber-100"
               >
                 Almost sold out
               </span>
             </div>
-            <p class="mb-1 text-sm text-slate-500 line-through dark:text-slate-500">
+            <p class="mb-1 text-sm text-slate-500 line-through dark:text-slate-400">
               {{ formatPrice(product.price) }}
             </p>
             <p class="mb-4 text-lg font-bold text-red-600 dark:text-red-400">
@@ -170,7 +170,7 @@ onUnmounted(() => {
             <div class="mt-auto flex justify-end">
               <button
                 type="button"
-                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50"
+                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
                 :disabled="product.qty < 1"
                 aria-label="Add to cart"
                 @click="addToCartAndGo(product)"
@@ -185,31 +185,31 @@ onUnmounted(() => {
       </div>
 
       <!-- Products section -->
-      <div class="home-card mt-8 w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-md dark:border-slate-700 dark:bg-slate-800 sm:p-8">
+      <div class="home-card mt-8 w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-md dark:border-slate-600 dark:bg-slate-800 dark:shadow-slate-900/30 sm:p-8">
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <div
             v-for="product in filteredRegularProducts"
             :key="product.id"
-            class="flex flex-col rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-slate-600 dark:bg-slate-700/50"
+            class="flex flex-col rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-slate-600 dark:bg-slate-700 dark:shadow-slate-900/30"
           >
-            <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-200">
+            <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-100">
               {{ product.name }}
             </h3>
-            <p class="mb-1 text-sm text-slate-600 dark:text-slate-400">
+            <p class="mb-1 text-sm text-slate-600 dark:text-slate-300">
               Stock: {{ product.qty }}
             </p>
-            <p class="mb-1 text-lg font-semibold text-slate-800 dark:text-slate-200">
+            <p class="mb-1 text-lg font-semibold text-slate-800 dark:text-slate-100">
               {{ formatPrice(product.price) }}
             </p>
-            <p v-if="product.discount > 0" class="mb-4 text-sm text-slate-600 dark:text-slate-400">
+            <p v-if="product.discount > 0" class="mb-4 text-sm text-slate-600 dark:text-slate-300">
               Discount {{ product.discount }}% →
-              {{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}
+              <span class="font-medium text-slate-800 dark:text-slate-200">{{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}</span>
             </p>
             <p v-else class="mb-4"></p>
             <div class="mt-auto flex justify-end">
               <button
                 type="button"
-                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50"
+                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
                 :disabled="product.qty < 1"
                 aria-label="Add to cart"
                 @click="addToCartAndGo(product)"
