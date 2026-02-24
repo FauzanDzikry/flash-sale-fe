@@ -2,10 +2,20 @@
 import { ref, computed, onMounted } from 'vue'
 import { useProductsStore } from '@/stores/products'
 import { useAuthStore } from '@/stores/auth'
+import { CATEGORY_OPTIONS } from '@/stores/productFilters'
 import type { Product } from '@/stores/products'
 
 const productsStore = useProductsStore()
 const authStore = useAuthStore()
+
+/** Options for dropdown: fixed list (same as navbar); when editing, include current value if not in list. */
+const categoryOptions = computed(() => {
+  const list = [...CATEGORY_OPTIONS]
+  if (formOpen.value !== 'edit' || !form.value.category) return list
+  const current = form.value.category
+  if (list.includes(current as (typeof CATEGORY_OPTIONS)[number])) return list
+  return [current, ...list].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+})
 
 const formOpen = ref<'none' | 'create' | 'edit'>('none')
 const editingId = ref<string | null>(null)
@@ -53,7 +63,7 @@ function openCreate() {
   formError.value = null
   form.value = {
     name: '',
-    category: productsStore.categories[0] ?? '',
+    category: CATEGORY_OPTIONS[0],
     stock: 0,
     price: 0,
     discount: 0,
@@ -195,18 +205,18 @@ const sortedProducts = computed(() => {
           <label for="seller-category" class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">
             Category
           </label>
-          <input
+          <select
             id="seller-category"
             v-model="form.category"
-            type="text"
-            list="seller-category-list"
             required
             class="w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-800 focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
-            placeholder="e.g. Electronics"
-          />
-          <datalist id="seller-category-list">
-            <option v-for="cat in productsStore.categories" :key="cat" :value="cat" />
-          </datalist>
+            aria-label="Select category"
+          >
+            <option value="">Select category</option>
+            <option v-for="cat in categoryOptions" :key="cat" :value="cat">
+              {{ cat }}
+            </option>
+          </select>
         </div>
         <div>
           <label for="seller-stock" class="mb-1 block text-sm font-medium text-slate-700 dark:text-slate-300">

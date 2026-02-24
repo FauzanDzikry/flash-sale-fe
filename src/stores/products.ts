@@ -88,12 +88,19 @@ export const useProductsStore = defineStore('products', () => {
     }
   }
 
-  /** Create product via API. created_by wajib dari user login. */
+  /** Create product via API. Backend expects created_by (user UUID) unless it takes user from JWT. */
   async function addProduct(
     data: Omit<CreateProductPayload, 'created_by'>,
     createdBy: string
   ): Promise<Product> {
-    const payload: CreateProductPayload = { ...data, created_by: createdBy }
+    const payload: CreateProductPayload = {
+      name: String(data.name ?? '').trim(),
+      category: String(data.category ?? '').trim(),
+      stock: Number(data.stock) || 0,
+      price: Number(data.price) || 0,
+      discount: Number(data.discount) || 0,
+      created_by: String(createdBy ?? ''),
+    }
     const created = await productsApi.create(payload)
     const product = mapResponse(created)
     if (!product) throw new Error('Invalid product response')

@@ -1,18 +1,16 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { useProductsStore } from '@/stores/products'
+
+/** Category options (navbar + form): alphabetically sorted. */
+export const CATEGORY_OPTIONS = ['books', 'electronics', 'fashion', 'sports'] as const
 
 export const useProductFiltersStore = defineStore('productFilters', () => {
   const searchQuery = ref('')
   const selectedCategory = ref('')
-  const productsStore = useProductsStore()
-
-  /** Categories for Home filter (from GET /products/all). */
-  const categories = computed(() => productsStore.allCategories)
 
   return {
     searchQuery,
     selectedCategory,
-    categories,
+    categories: CATEGORY_OPTIONS,
   }
 })
