@@ -4,15 +4,16 @@ import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { useProductFiltersStore } from '@/stores/productFilters'
 import { useCartStore } from '@/stores/cart'
-import { dummyProducts } from '@/data/dummyProducts'
-import type { DummyProduct } from '@/data/dummyProducts'
+import { useProductsStore } from '@/stores/products'
+import type { Product } from '@/stores/products'
 
 const router = useRouter()
 const auth = useAuthStore()
 const productFilters = useProductFiltersStore()
 const cart = useCartStore()
+const productsStore = useProductsStore()
 
-function addToCartAndGo(product: DummyProduct) {
+function addToCartAndGo(product: Product) {
   cart.addToCart(product, 1)
   router.push({ name: 'cart' })
 }
@@ -31,8 +32,9 @@ const displayName = computed(() => {
   return 'User'
 })
 
+/** Home pakai GET /products/all (GetAll). */
 const flashSaleProducts = computed(() =>
-  dummyProducts.filter((p) => p.discount > 50)
+  productsStore.allProducts.filter((p) => p.discount > 50)
 )
 
 const filteredFlashSaleProducts = computed(() => {
@@ -64,7 +66,7 @@ function formatSectionCountdown(): string {
 }
 
 const regularProducts = computed(() =>
-  dummyProducts.filter((p) => p.discount <= 50)
+  productsStore.allProducts.filter((p) => p.discount <= 50)
 )
 
 const filteredRegularProducts = computed(() => {
@@ -90,12 +92,14 @@ function priceAfterDiscount(price: number, discount: number): number {
 }
 
 const LOW_STOCK_THRESHOLD = 10
-function isLowStock(qty: number): boolean {
-  return qty <= LOW_STOCK_THRESHOLD
+function isLowStock(stock: number): boolean {
+  return stock <= LOW_STOCK_THRESHOLD
 }
 
 let timer: ReturnType<typeof setInterval> | null = null
 onMounted(() => {
+  productsStore.clearAllProductsError()
+  productsStore.fetchAllProducts()
   flashSaleEndsAt.value = Date.now() + 15 * 60 * 1000
   timer = setInterval(() => {
     now.value = Date.now()
@@ -130,6 +134,13 @@ onUnmounted(() => {
           </div>
         </div>
         <div
+          v-if="productsStore.allProductsLoading"
+          class="py-8 text-center text-slate-500 dark:text-slate-400"
+        >
+          Loading flash sale...
+        </div>
+        <div
+          v-else
           class="flash-sale-carousel flex gap-4 overflow-x-auto pb-2 scroll-smooth"
           style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;"
         >
@@ -152,10 +163,10 @@ onUnmounted(() => {
             </h3>
             <div class="mb-2 flex items-center gap-2">
               <p class="text-sm text-slate-600 dark:text-slate-300">
-                Stock: {{ product.qty }}
+                Stock: {{ product.stock }}
               </p>
               <span
-                v-if="isLowStock(product.qty)"
+                v-if="isLowStock(product.stock)"
                 class="rounded bg-amber-200 px-1.5 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-600/80 dark:text-amber-100"
               >
                 Almost sold out
@@ -171,7 +182,7 @@ onUnmounted(() => {
               <button
                 type="button"
                 class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
-                :disabled="product.qty < 1"
+                :disabled="product.stock < 1"
                 aria-label="Add to cart"
                 @click="addToCartAndGo(product)"
               >
@@ -184,9 +195,18 @@ onUnmounted(() => {
         </div>
       </div>
 
-      <!-- Products section -->
+      <!-- Products section (GET /products/all) -->
+      <p
+        v-if="productsStore.allProductsError"
+        class="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400"
+      >
+        {{ productsStore.allProductsError }}
+      </p>
       <div class="home-card mt-8 w-full rounded-2xl border border-slate-200 bg-white p-6 shadow-md dark:border-slate-600 dark:bg-slate-800 dark:shadow-slate-900/30 sm:p-8">
-        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div v-if="productsStore.allProductsLoading" class="py-12 text-center text-slate-500 dark:text-slate-400">
+          Loading products...
+        </div>
+        <div v-else class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <div
             v-for="product in filteredRegularProducts"
             :key="product.id"
@@ -196,7 +216,7 @@ onUnmounted(() => {
               {{ product.name }}
             </h3>
             <p class="mb-1 text-sm text-slate-600 dark:text-slate-300">
-              Stock: {{ product.qty }}
+              Stock: {{ product.stock }}
             </p>
             <p class="mb-1 text-lg font-semibold text-slate-800 dark:text-slate-100">
               {{ formatPrice(product.price) }}
@@ -210,7 +230,7 @@ onUnmounted(() => {
               <button
                 type="button"
                 class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
-                :disabled="product.qty < 1"
+                :disabled="product.stock < 1"
                 aria-label="Add to cart"
                 @click="addToCartAndGo(product)"
               >
@@ -223,7 +243,7 @@ onUnmounted(() => {
         </div>
 
         <p
-          v-if="filteredRegularProducts.length === 0"
+          v-if="!productsStore.allProductsLoading && filteredRegularProducts.length === 0"
           class="py-8 text-center text-slate-500 dark:text-slate-400"
         >
           No products match your search.

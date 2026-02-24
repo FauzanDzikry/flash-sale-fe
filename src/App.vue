@@ -5,6 +5,7 @@ import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { useProductFiltersStore } from '@/stores/productFilters'
 import { useCartStore } from '@/stores/cart'
+import Modal from '@/components/Modal.vue'
 import logo from '@/assets/logo.png'
 import logoWhite from '@/assets/logo-white.png'
 
@@ -18,6 +19,11 @@ const logoSrc = computed(() => (theme.isDark ? logoWhite : logo))
 
 function handleLogout() {
   auth.logout()
+  router.push({ name: 'login' })
+}
+
+function onSessionExpiredOk() {
+  auth.ackSessionExpired()
   router.push({ name: 'login' })
 }
 
@@ -89,6 +95,13 @@ const showNavbar = computed(() => !isAuthPage.value)
             </RouterLink>
           </template>
           <template v-else>
+            <RouterLink
+              to="/seller"
+              class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              active-class="router-link-active bg-slate-100 font-medium text-slate-900 dark:bg-slate-700 dark:text-slate-200"
+            >
+              Seller Center
+            </RouterLink>
             <RouterLink
               to="/cart"
               class="relative rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-slate-200"
@@ -166,5 +179,33 @@ const showNavbar = computed(() => !isAuthPage.value)
         </Transition>
       </RouterView>
     </main>
+
+    <!-- Popup when JWT expired (401): notice before redirect to login -->
+    <Modal
+      :show="auth.sessionExpiredShow"
+      title="Session expired"
+      :close-on-overlay="false"
+      @close="onSessionExpiredOk"
+    >
+      <div class="text-center py-2">
+        <div class="mb-4">
+          <svg class="h-12 w-12 text-amber-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <h2 class="text-xl font-bold text-slate-800 dark:text-slate-100 mb-2">Session Expired</h2>
+        <p class="text-slate-600 dark:text-slate-400 text-[15px] mb-5">
+          Your session has expired. Please login again to continue.
+        </p>
+        <button
+          type="button"
+          class="inline-block rounded-lg bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow transition hover:bg-primary-hover"
+          @click="onSessionExpiredOk"
+        >
+          Login
+        </button>
+      </div>
+    </Modal>
   </div>
 </template>
+

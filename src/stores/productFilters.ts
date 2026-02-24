@@ -1,19 +1,14 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-import { dummyProducts } from '@/data/dummyProducts'
+import { useProductsStore } from '@/stores/products'
 
 export const useProductFiltersStore = defineStore('productFilters', () => {
   const searchQuery = ref('')
   const selectedCategory = ref('')
+  const productsStore = useProductsStore()
 
-  const regularProducts = computed(() =>
-    dummyProducts.filter((p) => p.discount <= 50)
-  )
-
-  const categories = computed(() => {
-    const set = new Set(regularProducts.value.map((p) => p.category))
-    return Array.from(set).sort()
-  })
+  /** Categories for Home filter (from GET /products/all). */
+  const categories = computed(() => productsStore.allCategories)
 
   return {
     searchQuery,

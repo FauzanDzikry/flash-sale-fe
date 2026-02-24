@@ -22,6 +22,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => !!token.value)
   const currentUser = computed(() => user.value)
+  /** Show "Session expired" modal before redirect to login (set from session-expired event). */
+  const sessionExpiredShow = ref(false)
 
   function setAuth(accessToken: string, refreshToken?: string, userData?: StoredUser | null) {
     setTokens(accessToken, refreshToken)
@@ -40,9 +42,17 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
   }
 
+  function showSessionExpired() {
+    sessionExpiredShow.value = true
+  }
+
+  function ackSessionExpired() {
+    sessionExpiredShow.value = false
+  }
+
   async function login(payload: LoginPayload) {
     const res = await authApi.login(payload)
-    // Simpan id, name, email dari response.user (bukan hanya email)
+    // Store id, name, email from response.user (not just email)
     const userData = normalizeUser(res.user, payload.email)
     setAuth(res.access_token, res.refresh_token, userData)
     return res
@@ -50,7 +60,7 @@ export const useAuthStore = defineStore('auth', () => {
 
   async function register(payload: RegisterPayload) {
     const res = await authApi.register(payload)
-    // Simpan id, name, email dari response.user
+    // Store id, name, email from response.user
     const userData = normalizeUser(res.user, payload.email)
     setAuth(res.access_token, res.refresh_token, userData)
     return res
@@ -69,8 +79,11 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     isAuthenticated,
     currentUser,
+    sessionExpiredShow,
     setAuth,
     logout,
+    showSessionExpired,
+    ackSessionExpired,
     login,
     register,
     forgotPassword,

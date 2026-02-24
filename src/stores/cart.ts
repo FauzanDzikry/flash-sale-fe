@@ -1,6 +1,6 @@
 import { ref, computed, watch } from 'vue'
 import { defineStore } from 'pinia'
-import type { DummyProduct } from '@/data/dummyProducts'
+import type { Product } from '@/stores/products'
 
 const CART_STORAGE_KEY = 'flash-sale-cart'
 
@@ -67,21 +67,21 @@ export const useCartStore = defineStore('cart', () => {
     }, 0)
   )
 
-  function addToCart(product: DummyProduct, quantity = 1) {
+  function addToCart(product: Product, quantity = 1) {
     const existing = items.value.find((i) => i.productId === product.id)
-    const addQty = Math.min(quantity, Math.max(0, product.qty - (existing?.qty ?? 0)))
+    const addQty = Math.min(quantity, Math.max(0, product.stock - (existing?.qty ?? 0)))
     if (addQty <= 0) return
 
     if (existing) {
-      existing.qty = Math.min(existing.qty + addQty, product.qty)
-      existing.maxQty = product.qty
+      existing.qty = Math.min(existing.qty + addQty, product.stock)
+      existing.maxQty = product.stock
     } else {
       items.value.push({
         productId: product.id,
         name: product.name,
         price: product.price,
         discount: product.discount,
-        maxQty: product.qty,
+        maxQty: product.stock,
         qty: addQty,
       })
     }

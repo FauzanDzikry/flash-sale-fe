@@ -16,14 +16,14 @@ export interface RegisterPayload {
   password_confirmation: string
 }
 
-/** Objek user yang disimpan frontend: selalu id, name, email. */
+/** User object stored in frontend: always id, name, email. */
 export interface StoredUser {
   id: string
   name: string
   email: string
 }
 
-/** Response login/register dari backend: pakai access_token (bukan token) dan objek user. */
+/** Login/register response from backend: uses access_token and user object. */
 export interface AuthResponse {
   access_token: string
   refresh_token?: string
@@ -56,7 +56,7 @@ export function getRefreshToken(): string | null {
   return localStorage.getItem(REFRESH_TOKEN_KEY)
 }
 
-/** Simpan access_token (dan opsional refresh_token) dari response login. */
+/** Store access_token (and optional refresh_token) from login response. */
 export function setTokens(accessToken: string, refreshToken?: string): void {
   localStorage.setItem(TOKEN_KEY, accessToken)
   if (refreshToken) {
@@ -70,7 +70,7 @@ export function clearTokens(): void {
   localStorage.removeItem(USER_KEY)
 }
 
-/** Normalisasi objek user dari backend ke bentuk { id, name, email } yang disimpan frontend. Mendukung key alternatif (user_id, full_name). */
+/** Normalize backend user object to { id, name, email } for frontend storage. Supports alternate keys (user_id, full_name). */
 export function normalizeUser(
   resUser: AuthResponse['user'] | null | undefined,
   fallbackEmail = ''
@@ -99,7 +99,7 @@ export function normalizeUser(
   }
 }
 
-/** Simpan objek user (id, name, email) dari response login/register ke localStorage. */
+/** Store user object (id, name, email) from login/register response to localStorage. */
 export function setUser(user: StoredUser): void {
   localStorage.setItem(USER_KEY, JSON.stringify(user))
 }
@@ -119,7 +119,7 @@ export function getUser(): StoredUser | null {
   }
 }
 
-/** Unwrap jika backend mengembalikan { data: AuthResponse }. Ambil user dari body.user atau body.data?.user. */
+/** Unwrap if backend returns { data: AuthResponse }. Get user from body.user or body.data?.user. */
 function unwrapAuthResponse(body: AuthResponse | { data: AuthResponse }): AuthResponse {
   const raw = body as { data?: AuthResponse; user?: AuthResponse['user'] }
   const base =
