@@ -62,10 +62,12 @@ function handleCheckout() {
             <h3 class="font-semibold text-slate-800 dark:text-slate-200">
               {{ item.name }}
             </h3>
-            <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
-              {{ formatPrice(priceAfterDiscount(item.price, item.discount)) }}
-              <span v-if="item.discount > 0" class="text-slate-500 line-through">
+            <p class="mt-1 text-sm">
+              <span v-if="item.discount > 0" class="text-slate-500 line-through dark:text-slate-400">
                 {{ formatPrice(item.price) }}
+              </span>
+              <span :class="item.discount > 0 ? 'font-semibold text-sale' : 'text-slate-800 dark:text-slate-200'">
+                {{ formatPrice(priceAfterDiscount(item.price, item.discount)) }}
               </span>
             </p>
           </div>

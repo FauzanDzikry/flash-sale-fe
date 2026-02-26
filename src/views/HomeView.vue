@@ -126,7 +126,7 @@ onUnmounted(() => {
           <h2 class="text-xl font-bold uppercase tracking-wide text-slate-800 dark:text-slate-100 sm:text-2xl">
             Flash Sale
           </h2>
-          <div class="inline-flex items-center gap-3 rounded-lg bg-red-500 px-4 py-1.5 shadow dark:bg-red-600">
+          <div class="inline-flex items-center gap-3 rounded-lg bg-sale px-4 py-1.5 shadow">
             <span class="text-xs font-medium text-white">Ends in</span>
             <span class="font-mono text-sm font-bold tabular-nums text-white">
               {{ formatSectionCountdown() }}
@@ -150,11 +150,11 @@ onUnmounted(() => {
             class="flash-sale-card relative flex min-w-[280px] max-w-[280px] shrink-0 flex-col overflow-hidden rounded-xl border border-primary-border bg-white p-4 shadow-md dark:border-slate-600 dark:bg-slate-800 dark:shadow-slate-900/50"
             style="scroll-snap-align: start;"
           >
-            <span class="absolute right-2 top-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white shadow dark:bg-red-600">
+            <span class="absolute right-2 top-2 rounded-full bg-sale px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-white shadow">
               Flash Sale
             </span>
             <div class="mb-2 mt-1">
-              <span class="inline-block rounded bg-red-500 px-2 py-0.5 text-sm font-semibold text-white dark:bg-red-600">
+              <span class="inline-block rounded bg-sale px-2 py-0.5 text-sm font-semibold text-white">
                 -{{ product.discount }}%
               </span>
             </div>
@@ -175,7 +175,7 @@ onUnmounted(() => {
             <p class="mb-1 text-sm text-slate-500 line-through dark:text-slate-400">
               {{ formatPrice(product.price) }}
             </p>
-            <p class="mb-4 text-lg font-bold text-red-600 dark:text-red-400">
+            <p class="mb-4 text-lg font-bold text-sale">
               {{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}
             </p>
             <div class="mt-auto flex justify-end">
@@ -210,34 +210,41 @@ onUnmounted(() => {
           <div
             v-for="product in filteredRegularProducts"
             :key="product.id"
-            class="flex flex-col rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-sm dark:border-slate-600 dark:bg-slate-700 dark:shadow-slate-900/30"
+            class="flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-600 dark:bg-slate-800 dark:shadow-slate-900/30"
           >
-            <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-100">
-              {{ product.name }}
-            </h3>
-            <p class="mb-1 text-sm text-slate-600 dark:text-slate-300">
-              Stock: {{ product.stock }}
-            </p>
-            <p class="mb-1 text-lg font-semibold text-slate-800 dark:text-slate-100">
-              {{ formatPrice(product.price) }}
-            </p>
-            <p v-if="product.discount > 0" class="mb-4 text-sm text-slate-600 dark:text-slate-300">
-              Discount {{ product.discount }}% →
-              <span class="font-medium text-slate-800 dark:text-slate-200">{{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}</span>
-            </p>
-            <p v-else class="mb-4"></p>
-            <div class="mt-auto flex justify-end">
-              <button
-                type="button"
-                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
-                :disabled="product.stock < 1"
-                aria-label="Add to cart"
-                @click="addToCartAndGo(product)"
-              >
-                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </button>
+            <div class="flex flex-1 flex-col">
+              <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-100">
+                {{ product.name }}
+              </h3>
+              <p class="mb-1 text-sm text-slate-600 dark:text-slate-300">
+                Stock: {{ product.stock }}
+              </p>
+              <template v-if="product.discount > 0">
+                <p class="mb-1 text-sm text-slate-500 line-through dark:text-slate-400">
+                  {{ formatPrice(product.price) }}
+                </p>
+                <p class="mb-4 text-lg font-bold text-sale">
+                  {{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}
+                </p>
+              </template>
+              <template v-else>
+                <p class="mb-4 text-lg font-semibold text-slate-800 dark:text-slate-100">
+                  {{ formatPrice(product.price) }}
+                </p>
+              </template>
+              <div class="mt-auto flex justify-end">
+                <button
+                  type="button"
+                  class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
+                  :disabled="product.stock < 1"
+                  aria-label="Add to cart"
+                  @click="addToCartAndGo(product)"
+                >
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
         </div>

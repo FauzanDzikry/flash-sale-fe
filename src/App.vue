@@ -55,27 +55,29 @@ const showNavbar = computed(() => !isAuthPage.value)
         </RouterLink>
         <div
           v-if="auth.isAuthenticated"
-          class="flex min-w-0 flex-1 flex-wrap items-center gap-2 px-4 sm:gap-3"
+          class="flex min-w-0 flex-1 items-center px-4"
         >
-          <label for="navbar-product-search" class="sr-only">Search products</label>
-          <input
-            id="navbar-product-search"
-            v-model="productFilters.searchQuery"
-            type="search"
-            placeholder="Search products..."
-            class="w-full min-w-0 max-w-[180px] rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 placeholder-slate-500 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 dark:placeholder-slate-400 sm:max-w-[220px]"
-            autocomplete="off"
-          />
-          <select
-            v-model="productFilters.selectedCategory"
-            class="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200"
-            aria-label="Filter by category"
-          >
-            <option value="">All categories</option>
-            <option v-for="cat in productFilters.categories" :key="cat" :value="cat">
-              {{ cat }}
-            </option>
-          </select>
+          <div class="flex w-full max-w-md items-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50 dark:border-slate-600 dark:bg-slate-700">
+            <label for="navbar-product-search" class="sr-only">Search products</label>
+            <input
+              id="navbar-product-search"
+              v-model="productFilters.searchQuery"
+              type="search"
+              placeholder="Search products..."
+              class="min-w-0 flex-1 border-0 bg-transparent px-3 py-2 text-sm text-slate-800 placeholder-slate-500 transition focus:outline-none focus:ring-0 dark:text-slate-200 dark:placeholder-slate-400"
+              autocomplete="off"
+            />
+            <select
+              v-model="productFilters.selectedCategory"
+              class="shrink-0 border-l border-slate-200 bg-transparent px-3 py-2 text-sm text-slate-800 transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 dark:border-slate-600 dark:text-slate-200"
+              aria-label="Filter by category"
+            >
+              <option value="">All categories</option>
+              <option v-for="cat in productFilters.categories" :key="cat" :value="cat">
+                {{ cat }}
+              </option>
+            </select>
+          </div>
         </div>
         <nav class="ml-auto flex min-w-0 flex-1 flex-wrap items-center justify-end gap-2 sm:gap-4">
           <template v-if="!auth.isAuthenticated">
@@ -112,7 +114,7 @@ const showNavbar = computed(() => !isAuthPage.value)
               </svg>
               <span
                 v-if="cart.totalItems > 0"
-                class="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1.5 text-xs font-bold text-white"
+                class="absolute -right-0.5 -top-0.5 flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-sale px-1.5 text-xs font-bold text-white"
               >
                 {{ cart.totalItems > 99 ? '99+' : cart.totalItems }}
               </span>
@@ -179,6 +181,15 @@ const showNavbar = computed(() => !isAuthPage.value)
         </Transition>
       </RouterView>
     </main>
+
+    <footer class="border-t border-slate-200 bg-slate-100 py-4 dark:border-slate-700 dark:bg-slate-800/80">
+      <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-2 px-4 text-center text-sm text-slate-600 dark:text-slate-400 sm:justify-between">
+        <span>© 2026 Flash Sale</span>
+        <RouterLink to="/about" class="rounded px-2 py-1 transition hover:text-slate-900 hover:underline dark:hover:text-slate-200">
+          About
+        </RouterLink>
+      </div>
+    </footer>
 
     <!-- Popup when JWT expired (401): notice before redirect to login -->
     <Modal

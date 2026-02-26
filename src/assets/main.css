@@ -3,10 +3,13 @@
 
 @theme {
   --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --color-primary: #2482c2;
-  --color-primary-hover: #1a6396;
-  --color-primary-light: #e9f3f9;
-  --color-primary-border: #a7d1ed;
+  --color-primary: #268ACB;
+  --color-primary-hover: #1e6ba8;
+  --color-primary-light: #e8f4fc;
+  --color-primary-border: #a8d4f0;
+  --color-accent-orange: #EF9720;
+  --color-accent-green: #8FC43F;
+  --color-sale: #E41F29;
 }
 
 #app {
@@ -53,7 +56,7 @@
 .auth-page__bg {
   position: absolute;
   inset: 0;
-  background: #e9f3f9;
+  background: var(--color-primary-light);
   z-index: 0;
 }
 .auth-page__content {
@@ -86,12 +89,12 @@ img.auth-page__logo {
 .auth-page__brand .auth-page__logo:not(img) {
   font-size: 1.75rem;
   font-weight: 800;
-  color: #2482c2;
+  color: var(--color-primary);
   letter-spacing: -0.02em;
   transition: color 0.2s ease;
 }
 .auth-page__brand:hover .auth-page__logo:not(img) {
-  color: #1a6396;
+  color: var(--color-primary-hover);
 }
 .auth-card {
   background: white;
@@ -159,8 +162,8 @@ img.auth-page__logo {
   transition: color 0.2s ease, background 0.2s ease;
 }
 .auth-form__password-toggle:hover {
-  color: #2482c2;
-  background: #e9f3f9;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
 }
 .auth-form__toggle-icon {
   width: 1.25rem;
@@ -170,7 +173,7 @@ img.auth-page__logo {
 .auth-form__input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #a7d1ed;
+  border: 1px solid var(--color-primary-border);
   border-radius: 0.75rem;
   font-size: 1rem;
   background: #f8fafc;
@@ -178,22 +181,22 @@ img.auth-page__logo {
 }
 .auth-form__input:hover {
   background: white;
-  border-color: #2482c2;
+  border-color: var(--color-primary);
 }
 .auth-form__input:focus {
   outline: none;
-  border-color: #2482c2;
-  box-shadow: 0 0 0 3px rgba(36, 130, 194, 0.2);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(38, 138, 203, 0.2);
   background: white;
 }
 .auth-form__link {
   font-size: 0.875rem;
-  color: #2482c2;
+  color: var(--color-primary);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 .auth-form__link:hover {
-  color: #1a6396;
+  color: var(--color-primary-hover);
 }
 .auth-form__submit {
   width: 100%;
@@ -202,16 +205,16 @@ img.auth-page__logo {
   font-size: 1rem;
   font-weight: 600;
   color: white;
-  background: #2482c2;
+  background: var(--color-primary);
   border: none;
   border-radius: 0.75rem;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
 }
 .auth-form__submit:hover:not(:disabled) {
-  background: #1a6396;
+  background: var(--color-primary-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(36, 130, 194, 0.4);
+  box-shadow: 0 4px 12px rgba(38, 138, 203, 0.4);
 }
 .auth-form__submit:active:not(:disabled) {
   transform: translateY(0);
@@ -223,7 +226,7 @@ img.auth-page__logo {
 .auth-card__footer {
   margin-top: 1.5rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #a7d1ed;
+  border-top: 1px solid var(--color-primary-border);
   text-align: center;
   font-size: 0.875rem;
   color: #64748b;
@@ -269,12 +272,12 @@ img.auth-page__logo {
 }
 .dark .auth-form__input:hover {
   background: #1e293b;
-  border-color: #2482c2;
+  border-color: var(--color-primary);
 }
 .dark .auth-form__input:focus {
-  border-color: #2482c2;
+  border-color: var(--color-primary);
   background: #1e293b;
-  box-shadow: 0 0 0 3px rgba(36, 130, 194, 0.3);
+  box-shadow: 0 0 0 3px rgba(38, 138, 203, 0.3);
 }
 .dark .auth-form__link {
   color: #7dd3fc;
@@ -286,7 +289,7 @@ img.auth-page__logo {
   color: #94a3b8;
 }
 .dark .auth-form__password-toggle:hover {
-  color: #2482c2;
+  color: var(--color-primary);
   background: #334155;
 }
 .dark .auth-card__footer {
@@ -318,11 +321,11 @@ img.auth-page__logo {
   background: #7f1d1d;
 }
 .dark .app-header .app-header__btn-primary {
-  background: #2482c2;
+  background: var(--color-primary);
   color: white;
 }
 .dark .app-header .app-header__btn-primary:hover {
-  background: #1a6396;
+  background: var(--color-primary-hover);
 }
 
 .theme-toggle {
@@ -339,8 +342,8 @@ img.auth-page__logo {
   transition: color 0.2s ease, background 0.2s ease;
 }
 .theme-toggle:hover {
-  color: #2482c2;
-  background: #e9f3f9;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
 }
 .dark .theme-toggle {
   color: #94a3b8;
@@ -378,7 +381,7 @@ img.auth-page__logo {
   color: #94a3b8;
 }
 
-/* Flash sale card (discount > 50%): konsisten di dark theme - biru tema */
+/* Flash sale card (discount > 50%): konsisten di dark theme */
 .dark .flash-sale-card {
-  border-color: rgba(36, 130, 194, 0.5);
+  border-color: rgba(38, 138, 203, 0.5);
 }
