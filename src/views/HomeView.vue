@@ -162,15 +162,23 @@ onUnmounted(() => {
               {{ product.name }}
             </h3>
             <div class="mb-2 flex items-center gap-2">
-              <p class="text-sm text-slate-600 dark:text-slate-300">
-                Stock: {{ product.stock }}
-              </p>
-              <span
-                v-if="isLowStock(product.stock)"
-                class="rounded bg-amber-200 px-1.5 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-600/80 dark:text-amber-100"
+              <p
+                v-if="product.stock === 0"
+                class="text-sm font-medium text-red-600 dark:text-red-400"
               >
-                Almost sold out
-              </span>
+                Sold Out
+              </p>
+              <template v-else>
+                <p class="text-sm text-slate-600 dark:text-slate-300">
+                  Stock: {{ product.stock }}
+                </p>
+                <span
+                  v-if="isLowStock(product.stock)"
+                  class="rounded bg-amber-200 px-1.5 py-0.5 text-xs font-medium text-amber-900 dark:bg-amber-600/80 dark:text-amber-100"
+                >
+                  Almost sold out
+                </span>
+              </template>
             </div>
             <p class="mb-1 text-sm text-slate-500 line-through dark:text-slate-400">
               {{ formatPrice(product.price) }}
@@ -178,11 +186,10 @@ onUnmounted(() => {
             <p class="mb-4 text-lg font-bold text-sale">
               {{ formatPrice(priceAfterDiscount(product.price, product.discount)) }}
             </p>
-            <div class="mt-auto flex justify-end">
+            <div v-if="product.stock > 0" class="mt-auto flex justify-end">
               <button
                 type="button"
-                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
-                :disabled="product.stock < 1"
+                class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover dark:bg-primary dark:hover:bg-primary-hover"
                 aria-label="Add to cart"
                 @click="addToCartAndGo(product)"
               >
@@ -216,7 +223,16 @@ onUnmounted(() => {
               <h3 class="mb-2 font-semibold text-slate-800 dark:text-slate-100">
                 {{ product.name }}
               </h3>
-              <p class="mb-1 text-sm text-slate-600 dark:text-slate-300">
+              <p
+                v-if="product.stock === 0"
+                class="mb-1 text-sm font-medium text-red-600 dark:text-red-400"
+              >
+                Sold Out
+              </p>
+              <p
+                v-else
+                class="mb-1 text-sm text-slate-600 dark:text-slate-300"
+              >
                 Stock: {{ product.stock }}
               </p>
               <template v-if="product.discount > 0">
@@ -232,11 +248,10 @@ onUnmounted(() => {
                   {{ formatPrice(product.price) }}
                 </p>
               </template>
-              <div class="mt-auto flex justify-end">
+              <div v-if="product.stock > 0" class="mt-auto flex justify-end">
                 <button
                   type="button"
-                  class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover disabled:opacity-50 dark:bg-primary dark:hover:bg-primary-hover"
-                  :disabled="product.stock < 1"
+                  class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-white shadow transition hover:bg-primary-hover dark:bg-primary dark:hover:bg-primary-hover"
                   aria-label="Add to cart"
                   @click="addToCartAndGo(product)"
                 >

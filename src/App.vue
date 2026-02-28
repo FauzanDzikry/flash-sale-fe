@@ -105,6 +105,13 @@ const showNavbar = computed(() => !isAuthPage.value)
               Seller Center
             </RouterLink>
             <RouterLink
+              to="/orders"
+              class="rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              active-class="router-link-active bg-slate-100 font-medium text-slate-900 dark:bg-slate-700 dark:text-slate-200"
+            >
+              Orders
+            </RouterLink>
+            <RouterLink
               to="/cart"
               class="relative rounded-lg px-3 py-2 text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-700 dark:hover:text-slate-200"
               aria-label="Cart"
